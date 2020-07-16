@@ -3,10 +3,12 @@
 #include "x264.h"
 #include "librtmp/rtmp.h"
 #include "VideoChannel.h"
+#include "AudioChannel.h"
 #include "macro.h"
 #include "safe_queue.h"
 
 VideoChannel *videoChannel;
+AudioChannel *audioChannel;
 //开启线程的标志位,防止多次调用
 int isStart = 0;
 //线程
@@ -119,7 +121,9 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_frizzle_frizzlepush_LivePusher_native_1init(JNIEnv *env, jobject thiz) {
     videoChannel = new VideoChannel;
+    audioChannel = new AudioChannel;
     videoChannel->setVideoCallback(callback);
+    audioChannel->setAudioCallback(callback);
 }
 
 //初始化一些参数,宽高,fps,码率(bit率)
@@ -154,6 +158,7 @@ Java_com_frizzle_frizzlepush_LivePusher_native_1start(JNIEnv *env, jobject thiz,
     env->ReleaseStringUTFChars(rtmp_url, path);
 }
 
+//视频推流
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_frizzle_frizzlepush_LivePusher_native_1pushVideo(JNIEnv *env, jobject thiz,
@@ -166,4 +171,41 @@ Java_com_frizzle_frizzlepush_LivePusher_native_1pushVideo(JNIEnv *env, jobject t
     videoChannel->encodeData(data);
 
     env->ReleaseByteArrayElements(data_, data, 0);
+}
+
+//音频推流
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_frizzle_frizzlepush_LivePusher_native_1pushAudio(JNIEnv *env, jobject thiz,
+                                                          jbyteArray data_) {
+    jbyte *data = env->GetByteArrayElements(data_, NULL);
+
+    if (!audioChannel || !readyPushing){
+        return;
+    }
+    LOGE("音频推流");
+    audioChannel->encodeData(data);
+
+    env->ReleaseByteArrayElements(data_, data, 0);
+}
+
+//设置音频编码器信息
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_frizzle_frizzlepush_LivePusher_native_1setAudioEncInfo(JNIEnv *env, jobject thiz, jint simplesInSize,
+                                                                jint channels) {
+    if (audioChannel){
+        audioChannel->setAudioEncIfo(simplesInSize,channels);
+    }
+}
+
+//获取音频编码器的缓冲区大小
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_frizzle_frizzlepush_LivePusher_native_1getInputSamples(JNIEnv *env, jobject thiz) {
+
+    if (audioChannel){
+        return audioChannel->getInputSamples();
+    }
+    return -1;
 }

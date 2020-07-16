@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         //权限,简单处理下
         if (Build.VERSION.SDK_INT>Build.VERSION_CODES.N) {
             String[] perms= {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.RECORD_AUDIO};
-            if (checkSelfPermission(perms[0]) == PackageManager.PERMISSION_DENIED) {
+            if (checkSelfPermission(perms[0]) == PackageManager.PERMISSION_DENIED ||checkSelfPermission(perms[1]) == PackageManager.PERMISSION_DENIED ||checkSelfPermission(perms[2]) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(perms,200);
             }else {
                 livePusher.setPreviewDisplay(surfaceView.getHolder());

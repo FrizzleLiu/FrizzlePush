@@ -34,6 +34,15 @@ public class LivePusher {
     public void startLive(String rtmpUrl) {
         native_start(rtmpUrl);
         videoChannel.startLive();
+        audioChannel.startLive();
+    }
+
+
+    /**
+     * @return 获取音频编码器的缓冲区大小,和AudioRecord缓冲区大小做比较,取小的,因为空数据也会播放音频
+     */
+    public int getInputSamples() {
+        return native_getInputSamples();
     }
 
 
@@ -41,4 +50,7 @@ public class LivePusher {
     public native void native_setVideoEncInfo(int width,int height,int fps,int bitrate);
     public native void native_start(String rtmpUrl);
     public native void native_pushVideo(byte[] data);
+    public native void native_pushAudio(byte[] data);
+    public native void native_setAudioEncInfo(int simplesInSize, int channels);
+    public native int native_getInputSamples();
 }
