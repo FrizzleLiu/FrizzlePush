@@ -22,7 +22,9 @@ void AudioChannel::encodeData(int8_t *data) {
         //编码规范
         packet->m_body[0]=0xAF;
         packet->m_body[1]=0x01;
-
+        if (mChannels == 1) {
+            packet->m_body[0] = 0xAE;
+        }
         //编码后的aac数据,数据大小不固定,不包含前两位固定格式
         memcpy(&packet->m_body[2],buffer,bytelen);
 
@@ -45,7 +47,7 @@ void AudioChannel::setAudioCallback(AudioChannel::AudioCallback audioCallback) {
 }
 
 //设置编码器信息
-void AudioChannel::setAudioEncIfo(int simplesInSize, int channels) {
+void AudioChannel::setAudioEncIfno(int simplesInSize, int channels) {
     //打开编码器
     audioCodec = faacEncOpen(simplesInSize, channels, &inputSamples, &maxOutputBytes);
     //设置参数

@@ -15,7 +15,7 @@ class AudioChannel {
     typedef void (*AudioCallback)(RTMPPacket *packet);
 public:
     void encodeData(int8_t *data);
-    void setAudioEncIfo(int simplesInSize,int channels);
+    void setAudioEncIfno(int simplesInSize,int channels);
     jint getInputSamples();
     void setAudioCallback(AudioCallback audioCallback);
 private:

@@ -195,7 +195,7 @@ JNIEXPORT void JNICALL
 Java_com_frizzle_frizzlepush_LivePusher_native_1setAudioEncInfo(JNIEnv *env, jobject thiz, jint simplesInSize,
                                                                 jint channels) {
     if (audioChannel){
-        audioChannel->setAudioEncIfo(simplesInSize,channels);
+        audioChannel->setAudioEncIfno(simplesInSize,channels);
     }
 }
 

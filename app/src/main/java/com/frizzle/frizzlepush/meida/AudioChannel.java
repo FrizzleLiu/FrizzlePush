@@ -31,17 +31,16 @@ public class AudioChannel {
         }
         //设置音频编码器信息
         mLivePusher.native_setAudioEncInfo(44100, channels);
-        //16 位 2个字节
+        //faac返回的当前输入采样率对应的采样个数,因为是用的16位，所以*2是byte长度
         inputSamples = mLivePusher.getInputSamples() * 2;
         //        minBufferSize 音频信息的缓冲区大小和faac音频编码器的冲区大小做比较,取小的,因为空数据也会播放音频
         minBufferSize=  AudioRecord.getMinBufferSize(44100,
                 channelConfig, AudioFormat.ENCODING_PCM_16BIT)*2;
         Log.e("minBufferSize",minBufferSize+"");
         Log.e("inputSamples",inputSamples+"");
-        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, 8000, channelConfig,
+        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, 44100, channelConfig,
                 AudioFormat.ENCODING_PCM_16BIT, minBufferSize < inputSamples ? inputSamples: minBufferSize
         );
-        Log.e("audioRecord",audioRecord.getState()+"");
     }
     public void startLive() {
         isLiving = true;
