@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
             }else {
                 livePusher.setPreviewDisplay(surfaceView.getHolder());
             }
+        } else {
+            livePusher.setPreviewDisplay(surfaceView.getHolder());
         }
     }
 
